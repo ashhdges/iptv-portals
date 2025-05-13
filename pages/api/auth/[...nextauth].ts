@@ -2,7 +2,6 @@ import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import clientPromise from '@/lib/mongodb'
 import { compare } from 'bcryptjs'
-import { JWT } from 'next-auth/jwt'
 import { MongoClient } from 'mongodb'
 
 export const authOptions: AuthOptions = {
@@ -35,7 +34,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user && user.email) {
-        token.id = (user as any).id
+        token.id = (user as { id: string }).id
         token.email = user.email
       }
       return token
@@ -55,6 +54,7 @@ export const authOptions: AuthOptions = {
 }
 
 export default NextAuth(authOptions)
+
 
 
 
