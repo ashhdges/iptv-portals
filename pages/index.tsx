@@ -80,7 +80,6 @@ export default function Home() {
             Welcome to the ApexMediaPlayer Activation Portal
           </h1>
 
-          {/* Rest of content remains unchanged */}
           <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-6 rounded text-left">
             <h2 className="font-semibold text-lg mb-1">Important: Please Read</h2>
             <p className="text-sm">
@@ -96,8 +95,113 @@ export default function Home() {
             </p>
           </div>
 
-          {/* ...rest of the form and footer stays as-is */}
-          {/* You can leave the rest of the original content unchanged below this */}
+          <div className="mb-6 text-sm text-gray-700 leading-relaxed text-left">
+            <p>
+              Activation for <strong>iOS devices</strong> is <strong>£6.99 GBP</strong> and is valid for
+              <strong> 12 months</strong> per device.
+            </p>
+            <p className="mt-2">
+              If you need help, please contact us at <strong>support@example.com</strong>.
+            </p>
+          </div>
+
+          {/* Activation Form */}
+          <form onSubmit={handleSubmit} className="space-y-4 text-left">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">MAC Address</label>
+              <input
+                type="text"
+                value={mac}
+                onChange={(e) => setMac(e.target.value)}
+                className="w-full p-2 border rounded placeholder:text-gray-500"
+                placeholder="e.g. 00:11:22:33:44:55"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Server URL</label>
+              <input
+                type="text"
+                value={baseUrl}
+                onChange={(e) => setBaseUrl(e.target.value)}
+                className="w-full p-2 border rounded placeholder:text-gray-500"
+                placeholder="e.g. http://yourprovider.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full p-2 border rounded placeholder:text-gray-500"
+                placeholder="Your IPTV username"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border rounded placeholder:text-gray-500"
+                placeholder="Your IPTV password"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                id="acceptTerms"
+                className="h-4 w-4"
+              />
+              <label htmlFor="acceptTerms" className="text-sm text-gray-700">
+                I understand that I must provide my own IPTV service URL, username, and password. No
+                refunds will be given if this is not provided.
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            >
+              {loading ? 'Processing...' : 'Activate & Pay £6.99'}
+            </button>
+
+            {message && (
+              <div
+                className={`mt-4 p-3 rounded text-sm text-center ${
+                  message.toLowerCase().includes('redirecting')
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
+              >
+                {message}
+              </div>
+            )}
+          </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-700">
+              Interested in offering ApexMediaPlayer to your customers?{' '}
+              <Link
+                href="/supplier/request"
+                className="text-blue-600 font-semibold underline hover:text-blue-800"
+              >
+                Become a reseller
+              </Link>
+            </p>
+          </div>
+
+          <div className="mt-10 text-center text-sm text-gray-400">
+            App screenshots and iOS download link will be available soon.
+          </div>
         </div>
       </div>
 
@@ -118,6 +222,7 @@ export default function Home() {
     </>
   )
 }
+
 
 
 
