@@ -15,8 +15,10 @@
     "incremental": true,
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "types": ["next-auth"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "types/next-auth.d.ts"],
   "exclude": ["node_modules"]
 }
+
