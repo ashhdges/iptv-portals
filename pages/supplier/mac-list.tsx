@@ -98,11 +98,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const db = client.db('test')
   const supplier = await db.collection('suppliers').findOne({ email: session.user.email })
 
-  const macs = await db
-    .collection('macconfigs')
-    .find({ supplierId: supplier._id.toString() })
-    .sort({ activated_at: -1 })
-    .toArray()
+ if (!supplier) {
+  throw new Error("Supplier not found")
+}
+
+const macs = await db
+  .collection('macconfigs')
+  .find({ supplierId: supplier._id.toString() })
+  .sort({ activated_at: -1 })
+  .toArray()
+
 
 const safeMacs = macs.map((mac) => ({
   ...mac,
