@@ -5,11 +5,6 @@ import { compare } from 'bcryptjs'
 import { JWT } from 'next-auth/jwt'
 import { MongoClient } from 'mongodb'
 
-interface ExtendedUser {
-  id: string
-  email: string
-}
-
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -26,7 +21,7 @@ export const authOptions: AuthOptions = {
         if (user && credentials?.password) {
           const isValid = await compare(credentials.password, user.password)
           if (isValid) {
-            return { id: user._id.toString(), email: user.email } as ExtendedUser
+            return { id: user._id.toString(), email: user.email ?? '' }
           }
         }
 
@@ -38,15 +33,15 @@ export const authOptions: AuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: ExtendedUser }): Promise<JWT> {
-      if (user) {
-        token.id = user.id
+    async jwt({ token, user }) {
+      if (user && user.email) {
+        token.id = (user as any).id
         token.email = user.email
       }
       return token
     },
     async session({ session, token }) {
-      if (session.user && token) {
+      if (session.user) {
         session.user.id = token.id as string
         session.user.email = token.email as string
       }
@@ -60,5 +55,6 @@ export const authOptions: AuthOptions = {
 }
 
 export default NextAuth(authOptions)
+
 
 
