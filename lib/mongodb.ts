@@ -8,7 +8,6 @@ if (!uri) {
 }
 
 let client: MongoClient
-let clientPromise: Promise<MongoClient>
 
 type GlobalWithMongo = typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>
@@ -21,8 +20,9 @@ if (!globalWithMongo._mongoClientPromise) {
   globalWithMongo._mongoClientPromise = client.connect()
 }
 
-clientPromise = globalWithMongo._mongoClientPromise
+const clientPromise = globalWithMongo._mongoClientPromise
 
 export default clientPromise
+
 
 
