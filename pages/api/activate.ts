@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import Stripe from 'stripe'
+import { Stripe } from 'stripe'
 import clientPromise from '@/lib/mongodb'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
