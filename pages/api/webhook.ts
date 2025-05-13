@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import clientPromise from '@/lib/mongodb'
 import { buffer } from 'micro'
@@ -19,25 +19,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const sig = req.headers['stripe-signature'] as string
-
   let event: Stripe.Event
 
   try {
     const buf = await buffer(req)
     event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch (err: any) {
-    console.error('Webhook Error:', err.message)
-    return res.status(400).send(`Webhook Error: ${err.message}`)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error('Webhook Error:', err.message)
+      return res.status(400).send(`Webhook Error: ${err.message}`)
+    }
+    console.error('Unknown webhook error', err)
+    return res.status(400).send('Webhook Error')
   }
 
-  // ✅ On payment success
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const metadata = session.metadata
 
     if (!metadata) return res.status(400).end('Missing metadata')
 
-        console.log('Webhook session object:', session)
+    console.log('Webhook session object:', session)
 
     const { mac, baseUrl, username, password } = metadata
 
@@ -55,11 +57,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       password,
       activated_at: now,
       expires_at: expiry,
-      supplierId: null, // self-activation
+      supplierId: null,
     })
 
     console.log(`✅ Stored activated MAC: ${mac}`)
   }
 
-  res.status(200).json({ received: true })
+  return res.status(200).json({ received: true })
 }
+

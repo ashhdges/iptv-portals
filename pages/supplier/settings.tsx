@@ -3,13 +3,12 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
-
-type User = {
-  email: string
+interface ExistingSettings {
+  baseUrl?: string
+  logo?: string
 }
 
-export default function SupplierSettings({ user }: { user: User }) {
-
+export default function SupplierSettings({ existingSettings }: { existingSettings: ExistingSettings }) {
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -35,13 +34,12 @@ export default function SupplierSettings({ user }: { user: User }) {
     const data = await res.json()
     setLoading(false)
 
-   if (res.ok) {
-  setMessage('Settings saved successfully! Redirecting...')
-  setTimeout(() => {
-    router.push('/supplier/dashboard')
-  }, 1500)
-}
- else {
+    if (res.ok) {
+      setMessage('Settings saved successfully! Redirecting...')
+      setTimeout(() => {
+        router.push('/supplier/dashboard')
+      }, 1500)
+    } else {
       setMessage(data.error || 'Failed to save settings.')
     }
   }
@@ -90,7 +88,12 @@ export default function SupplierSettings({ user }: { user: User }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
   if (!session || !session.user) {
-    return { redirect: { destination: '/supplier/login', permanent: false } }
+    return {
+      redirect: {
+        destination: '/supplier/login',
+        permanent: false,
+      },
+    }
   }
 
   const client = await (await import('@/lib/mongodb')).default
@@ -103,3 +106,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+

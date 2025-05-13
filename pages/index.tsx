@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-
+import Image from 'next/image'
 
 export default function Home() {
   const [mac, setMac] = useState('')
@@ -41,32 +41,29 @@ export default function Home() {
   return (
     <>
       {/* Header */}
-<div className="w-full flex justify-between items-center p-4 bg-white shadow fixed top-0 left-0 right-0 z-10">
-  <a href="/" className="flex items-center space-x-2">
-    <img src="/logo.png" alt="Logo" className="h-10 w-auto sm:h-12" />
-    <span className="text-lg font-semibold text-gray-800 hidden sm:inline">ApexMediaPlayer</span>
-  </a>
+      <div className="w-full flex justify-between items-center p-4 bg-white shadow fixed top-0 left-0 right-0 z-10">
+        <Link href="/" className="flex items-center space-x-2">
+          <Image src="/logo.png" alt="Logo" width={120} height={40} priority />
+          <span className="text-lg font-semibold text-gray-800 hidden sm:inline">
+            ApexMediaPlayer
+          </span>
+        </Link>
 
-  <div className="flex space-x-2">
-  
-   <Link
-  href="/update"
-  className="text-sm text-gray-700 border border-gray-400 px-4 py-2 rounded hover:bg-gray-100 transition"
->
-  Update List
-</Link>
-
-<Link
-  href="/supplier/login"
-  className="text-sm text-blue-600 border border-blue-600 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition"
->
-  Reseller Login
-</Link>
-
-  </div>
-</div>
-
-
+        <div className="flex space-x-2">
+          <Link
+            href="/update"
+            className="text-sm text-gray-700 border border-gray-400 px-4 py-2 rounded hover:bg-gray-100 transition"
+          >
+            Update List
+          </Link>
+          <Link
+            href="/supplier/login"
+            className="text-sm text-blue-600 border border-blue-600 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition"
+          >
+            Reseller Login
+          </Link>
+        </div>
+      </div>
 
       <div className="h-16" />
 
@@ -185,12 +182,12 @@ export default function Home() {
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-700">
               Interested in offering ApexMediaPlayer to your customers?{' '}
-              <a
+              <Link
                 href="/supplier/request"
                 className="text-blue-600 font-semibold underline hover:text-blue-800"
               >
                 Become a reseller
-              </a>
+              </Link>
             </p>
           </div>
 
@@ -199,23 +196,26 @@ export default function Home() {
           </div>
         </div>
       </div>
-   <div className="mt-12 text-center text-sm text-gray-500">
-  <p>
-    <a href="/terms" className="hover:underline hover:text-blue-600">
-      Terms of Use
-    </a>{' '}
-    |{' '}
-    <a href="/privacy" className="hover:underline hover:text-blue-600">
-      Privacy Policy
-    </a>
-  </p>
-  <p className="mt-2">&copy; {new Date().getFullYear()} ApexMediaPlayer. All rights reserved.</p>
-</div>
 
+      <div className="mt-12 text-center text-sm text-gray-500">
+        <p>
+          <Link href="/terms" className="hover:underline hover:text-blue-600">
+            Terms of Use
+          </Link>{' '}
+          |{' '}
+          <Link href="/privacy" className="hover:underline hover:text-blue-600">
+            Privacy Policy
+          </Link>
+        </p>
+        <p className="mt-2">
+          &copy; {new Date().getFullYear()} ApexMediaPlayer. All rights reserved.
+        </p>
+      </div>
     </>
-    
   )
 }
+
+
 
 
 

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { getSession, useSession } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import clientPromise from '@/lib/mongodb'
@@ -12,11 +12,11 @@ type MacData = {
   logo?: string
   username?: string
   password?: string
+  activated_at?: string | null
+  expires_at?: string | null
 }
 
 export default function EditMac({ macData }: { macData: MacData }) {
-
-  
   const router = useRouter()
 
   const [baseUrl, setBaseUrl] = useState(macData.baseUrl || '')
@@ -120,17 +120,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const db = client.db('test')
 
   const macData = await db.collection('macconfigs').findOne({ _id: new ObjectId(macId) })
+
   if (!macData) return { notFound: true }
 
- return {
-  props: {
-    macData: {
-      ...macData,
-      _id: macData._id.toString(),
-      activated_at: macData.activated_at?.toISOString() || null,
-      expires_at: macData.expires_at?.toISOString() || null,
+  return {
+    props: {
+      macData: {
+        ...macData,
+        _id: macData._id.toString(),
+        activated_at: macData.activated_at?.toISOString() || null,
+        expires_at: macData.expires_at?.toISOString() || null,
+      },
     },
-  },
+  }
 }
 
-}
