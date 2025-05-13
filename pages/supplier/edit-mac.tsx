@@ -5,8 +5,18 @@ import { useState } from 'react'
 import clientPromise from '@/lib/mongodb'
 import { ObjectId } from 'mongodb'
 
-export default function EditMac({ macData }: { macData: any }) {
-  const { data: session } = useSession()
+type MacData = {
+  _id: string
+  mac: string
+  baseUrl: string
+  logo?: string
+  username?: string
+  password?: string
+}
+
+export default function EditMac({ macData }: { macData: MacData }) {
+
+  
   const router = useRouter()
 
   const [baseUrl, setBaseUrl] = useState(macData.baseUrl || '')

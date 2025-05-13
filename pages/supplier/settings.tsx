@@ -4,7 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 
-export default function SupplierSettings({ existingSettings }: { existingSettings: any }) {
+type User = {
+  email: string
+}
+
+export default function SupplierSettings({ user }: { user: User }) {
+
   const { data: session } = useSession()
   const router = useRouter()
 

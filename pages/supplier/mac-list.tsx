@@ -2,9 +2,18 @@ import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import clientPromise from '@/lib/mongodb'
 import Link from 'next/link'
-import { ObjectId } from 'mongodb'
 
-export default function MacListPage({ macs }: { macs: any[] }) {
+
+type Mac = {
+  _id: string
+  mac: string
+  baseUrl?: string
+  username?: string
+  expires_at?: string
+}
+
+export default function MacListPage({ macs }: { macs: Mac[] }) {
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">
