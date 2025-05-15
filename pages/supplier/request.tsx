@@ -44,9 +44,9 @@ export default function SupplierRequest() {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl mt-12 space-y-5"
       >
-        <h1 className="text-3xl font-bold text-center text-blue-700 mb-2">Supplier Portal Request</h1>
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-2">Reseller Portal Request</h1>
         <p className="text-sm text-gray-600 text-center mb-6 leading-relaxed">
-          Fill out this form to request a supplier account. Once submitted, we’ll reach out to you
+          Fill out this form to request a Reseller portal. Once submitted, we’ll reach out to you
           to arrange payment and activate your portal access.
         </p>
 
