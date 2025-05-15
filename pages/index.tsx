@@ -43,7 +43,7 @@ export default function Home() {
       {/* Header */}
       <div className="w-full flex justify-between items-center p-4 bg-white shadow fixed top-0 left-0 right-0 z-10">
         <Link href="/" className="text-lg font-semibold text-gray-800">
-          ApexMediaPlayer
+          ApxPlayer
         </Link>
 
         <div className="flex space-x-2">
