@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import clientPromise from '@/lib/mongodb'
 import Link from 'next/link'
-
+import { useState } from 'react'
 
 type Mac = {
   _id: string
@@ -13,6 +13,32 @@ type Mac = {
 }
 
 export default function MacListPage({ macs }: { macs: Mac[] }) {
+  const [loadingMac, setLoadingMac] = useState<string | null>(null)
+
+  const handleRenew = async (macAddress: string) => {
+    setLoadingMac(macAddress)
+    try {
+      const res = await fetch('/api/supplier/renew-mac', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mac: macAddress }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(`MAC renewed until ${new Date(data.newExpiry).toLocaleDateString()}`)
+        window.location.reload()
+      } else {
+        alert(data.error || 'Failed to renew MAC')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Something went wrong')
+    } finally {
+      setLoadingMac(null)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -53,7 +79,7 @@ export default function MacListPage({ macs }: { macs: Mac[] }) {
                         : 'N/A'}
                     </td>
                     <td className="p-3 whitespace-nowrap">
-                      <div className="flex items-center space-x-3">
+                      <div className="flex flex-wrap gap-3 items-center">
                         <Link
                           href={`/supplier/edit-mac?id=${mac._id}`}
                           className="text-blue-600 hover:underline"
@@ -74,6 +100,15 @@ export default function MacListPage({ macs }: { macs: Mac[] }) {
                           className="text-red-600 hover:underline"
                         >
                           Delete
+                        </button>
+                        <button
+                          onClick={() => handleRenew(mac.mac)}
+                          disabled={loadingMac === mac.mac}
+                          className={`text-green-600 hover:underline ${
+                            loadingMac === mac.mac ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                        >
+                          {loadingMac === mac.mac ? 'Renewing...' : 'Renew'}
                         </button>
                       </div>
                     </td>
@@ -98,25 +133,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const db = client.db('test')
   const supplier = await db.collection('suppliers').findOne({ email: session.user.email })
 
- if (!supplier) {
-  throw new Error("Supplier not found")
-}
+  if (!supplier) {
+    throw new Error("Supplier not found")
+  }
 
-const macs = await db
-  .collection('macconfigs')
-  .find({ supplierId: supplier._id.toString() })
-  .sort({ activated_at: -1 })
-  .toArray()
+  const macs = await db
+    .collection('macconfigs')
+    .find({ supplierId: supplier._id.toString() })
+    .sort({ activated_at: -1 })
+    .toArray()
 
-
-const safeMacs = macs.map((mac) => ({
-  ...mac,
-  _id: mac._id.toString(),
-  activated_at: mac.activated_at?.toISOString() || null,
-  expires_at: mac.expires_at?.toISOString() || null,
-  updated_at: mac.updated_at?.toISOString() || null, // ✅ this is the fix
-}))
-
+  const safeMacs = macs.map((mac) => ({
+    ...mac,
+    _id: mac._id.toString(),
+    activated_at: mac.activated_at?.toISOString() || null,
+    expires_at: mac.expires_at?.toISOString() || null,
+    updated_at: mac.updated_at?.toISOString() || null,
+  }))
 
   return {
     props: {
@@ -124,4 +157,5 @@ const safeMacs = macs.map((mac) => ({
     },
   }
 }
+
 
