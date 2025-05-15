@@ -101,7 +101,7 @@ export default function Home() {
               <strong> 12 months</strong> per device.
             </p>
             <p className="mt-2">
-              If you need help, please contact us at <strong>support@example.com</strong>.
+              If you need help, please contact us at <strong>info@apxapp.xyz</strong>.
             </p>
           </div>
 
