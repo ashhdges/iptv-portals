@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           price_data: {
             currency: 'gbp', // or 'gbp' if you're charging £
             product_data: {
-              name: 'IPTV Activation (12 months)',
+              name: 'Apex Media Player 12 months activation',
               description: `MAC: ${mac}`,
             },
             unit_amount: 699, // £6.99 GBP = 699 in minor units
